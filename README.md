@@ -1,3 +1,14 @@
+<!-- repo image -->
+<br />
+<div align="center">
+  <a href="https://github.com/github_username/repo_name">
+    <img src="https://github.com/Abubacer/README-Template/blob/master/images/banner.png" alt="IMG" 
+  </a>
+
+<h1 align="center"></h1>
+<div align="left">
+<br />
+
 # 0x1D. C - Binary trees
 
 ## Learning Objectives
@@ -57,3 +68,5 @@ typedef struct binary_tree_s heap_t;
 This function is used only for visualization purposes.
 
 [Function link](https://github.com/alx-tools/0x1C.c)
+
+</div>
