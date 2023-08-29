@@ -5,11 +5,8 @@
     <img src="https://github.com/Abubacer/README-Template/blob/master/images/banner.png" alt="IMG" 
   </a>
 
-<h1 align="center"></h1>
+<h1 align="center">0x1D. C - Binary trees</h1>
 <div align="left">
-<br />
-
-# 0x1D. C - Binary trees
 
 ## Learning Objectives
 
