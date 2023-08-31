@@ -9,76 +9,73 @@
  */
 avl_t *avl_insert(avl_t **tree, int value)
 {
-	avl_t *new_node;
+	avl_t *new_node, *parent, *current;
 
-	if (tree == NULL)
+	new_node = binary_tree_node(NULL, value);
+
+	if (tree == NULL || new_node == NULL)
 		return (NULL);
 
 	if (*tree == NULL)
 	{
-		*tree = binary_tree_node(NULL, value);
-		return (*tree);
+		*tree = new_node;
+		return (new_node);
 	}
-
-	if (value == (*tree)->n)
-		return (NULL);
-
-	if (value < (*tree)->n)
+	parent = *tree;
+	current = *tree;
+	while (current != NULL)
 	{
-		new_node = avl_insert(&((*tree)->left), value);
-
-		if (new_node == NULL)
+		if (value < current->n)
+		{
+			parent = current;
+			current = current->left;
+		}
+		else if (value > current->n)
+		{
+			parent = current;
+			current = current->right;
+		}
+		else
+		{
+			free(new_node);
 			return (NULL);
-
-		(*tree)->left = new_node;
+		}
 	}
+	if (value < parent->n)
+		parent->left = new_node;
 	else
-	{
-		new_node = avl_insert(&((*tree)->right), value);
+		parent->right = new_node;
 
-		if (new_node == NULL)
-			return (NULL);
-
-		(*tree)->right = new_node;
-	}
-
-	return (balance_avl_tree(*tree));
+	new_node->parent = parent;
+	balance_avl_tree(new_node);
+	return (new_node);
 }
-
 /**
  * balance_avl_tree - a function that balances an AVL Tree after insertion.
- * @tree: a pointer to the root node of the AVL tree.
+ * @node: a pointer to the root node of the AVL tree.
  *
  * Return: a pointer to the new root node after balancing.
  */
-avl_t *balance_avl_tree(avl_t *tree)
+avl_t *balance_avl_tree(avl_t *node)
 {
 	int balance_factor;
 
-	balance_factor = binary_tree_balance(tree);
+	balance_factor = binary_tree_balance(node);
 
 	if (balance_factor > 1)
 	{
-		if (binary_tree_balance(tree->left) >= 0)
-			return (binary_tree_rotate_right(tree));
+		if (binary_tree_balance(node->left) < 0)
+			node = binary_tree_rotate_left(node->left);
 
-		else
-		{
-			tree->left = binary_tree_rotate_left(tree->left);
-			return (binary_tree_rotate_right(tree));
-		}
+		node = binary_tree_rotate_right(node);
 	}
-	if (balance_factor < -1)
+	else if (balance_factor < -1)
 	{
-		if (binary_tree_balance(tree->right) <= 0)
-			return (binary_tree_rotate_left(tree));
+		if (binary_tree_balance(node->right) > 0)
+			node = binary_tree_rotate_right(node->right);
 
-		else
-		{
-			tree->right = binary_tree_rotate_right(tree->right);
-			return (binary_tree_rotate_left(tree));
-		}
+		node = binary_tree_rotate_left(node);
 	}
 
-	return (tree);
+	return (node);
 }
