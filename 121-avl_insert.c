@@ -4,18 +4,18 @@
  * avl_insert - a function that inserts a value in an AVL Tree.
  * @tree: a double pointer to the root node for inserting the value.
  * @value: the value to store in the node to be inserted.
- *
  * Return: a pointer to the created node, or NULL on failure.
  */
 avl_t *avl_insert(avl_t **tree, int value)
 {
 	avl_t *new_node, *parent, *current;
 
+	if (tree == NULL)
+		return (NULL);
 	new_node = binary_tree_node(NULL, value);
 
 	if (new_node == NULL)
 		return (NULL);
-
 	if (*tree == NULL)
 	{
 		*tree = new_node;
@@ -45,7 +45,6 @@ avl_t *avl_insert(avl_t **tree, int value)
 		parent->left = new_node;
 	else
 		parent->right = new_node;
-
 	new_node->parent = parent;
 	balance_avl_tree(new_node);
 	return (new_node);
