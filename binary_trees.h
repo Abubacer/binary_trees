@@ -67,7 +67,6 @@ bst_t *bst_minval_node(bst_t *node);
 int binary_tree_is_avl(const binary_tree_t *tree);
 int is_valid_avl(const binary_tree_t *node, const int *min, const int *max);
 avl_t *avl_insert(avl_t **tree, int value);
-avl_t *balance_avl_tree(avl_t *node);
 avl_t *array_to_avl(int *array, size_t size);
 avl_t *avl_remove(avl_t *root, int value);
 int binary_tree_is_heap(const binary_tree_t *tree);
@@ -75,5 +74,12 @@ heap_t *heap_insert(heap_t **root, int value);
 heap_t *array_to_heap(int *array, size_t size);
 int heap_extract(heap_t **root);
 int *heap_to_sorted_array(heap_t *heap, size_t *size);
+
+size_t bt_size(const binary_tree_t *tree);
+heap_t *swap_values(heap_t *new, heap_t *parent);
+heap_t *heap_find_parent(heap_t *root, size_t idx);
+
+avl_t *avl_tree_rebalance(avl_t **root, avl_t *tree, int value);
+avl_t *recursive_avl_insert(avl_t *tree, avl_t *parent, int value);
 
 #endif

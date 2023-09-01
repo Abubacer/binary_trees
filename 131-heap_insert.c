@@ -10,111 +10,95 @@
 heap_t *heap_insert(heap_t **root, int value)
 {
 	heap_t *new_node, *parent;
-	int tmp;
+	size_t size;
+	int swap_value_ok = 1;
 
 	if (root == NULL)
 		return (NULL);
 
-	new_node = binary_tree_node(NULL, value);
-	if (new_node == NULL)
-		return (NULL);
-
 	if (*root == NULL)
 	{
+		new_node = binary_tree_node(NULL, value);
 		*root = new_node;
 		return (new_node);
 	}
-	parent = *root;
-	while (parent->left != NULL || parent->right != NULL)
-	{
-		if (parent->right == NULL)
-			parent = parent->left;
-		/*else if (binary_tree_is_perfect(parent->left))
-			parent = parent->right;*/
-		else
-			parent = parent->right;
-	}
-	if (parent->left == NULL)
+
+	size = bt_size(*root);
+	parent = heap_find_parent(*root, (size - 1) / 2);
+	new_node = binary_tree_node(parent, value);
+
+	if (size % 2 == 1)
 		parent->left = new_node;
 	else
 		parent->right = new_node;
 
-	while (new_node->parent && new_node->n > new_node->parent->n)
+	if (new_node == NULL)
+		return (NULL);
+
+	while (swap_value_ok == 1 && parent != NULL)
 	{
-		tmp = new_node->n;
-		new_node->n = new_node->parent->n;
-		new_node->parent->n = tmp;
-		new_node = new_node->parent;
+		if (parent->n >= new_node->n)
+			swap_value_ok = 0;
+		else
+		{
+			new_node = swap_values(new_node, parent);
+			parent = new_node->parent;
+		}
 	}
+
 	return (new_node);
+}
+/**
+ * heap_find_parent - finds the parent node for insertion.
+ * @root: a pointer to the root node of the heap.
+ * @idx: the index of the node to find.
+ *
+ * Return: a pointer to the parent node.
+ */
+heap_t *heap_find_parent(heap_t *root, size_t idx)
+{
+	heap_t *parent;
+	size_t child_index;
+
+	if (idx == 0)
+		return (root);
+
+	parent = heap_find_parent(root, (idx - 1) / 2);
+	child_index = (idx - 1) % 2;
+
+	if (child_index == 0)
+		return (parent->left);
+	return (parent->right);
 }
 
 /**
- * binary_tree_size - a function that measures the size of a binary tree
+ * bt_size - a function that measures the size of a binary tree
  * If tree is NULL, your function must return 0.
- * @tree: a pointer to the root node of the tree to measure the size.
+ * @tree: a pointer to the root node of the tree to measure the height.
  *
  * Return: the size of the binary tree.
  */
 
-size_t binary_tree_size(const binary_tree_t *tree)
+size_t bt_size(const binary_tree_t *tree)
 {
-	size_t left_size, right_size;
-
 	if (tree == NULL)
 		return (0);
 
-	left_size = binary_tree_size(tree->left);
-	right_size = binary_tree_size(tree->right);
-
-	return (left_size + right_size + 1);
+	return (1 + bt_size(tree->left) + bt_size(tree->right));
 }
 
 /**
- * binary_tree_height - a function that measures the height of a binary tree
- * If tree is NULL, your function must return 0.
- * @tree: a pointer to the root node of the tree to measure the height.
- *
- * Return: the height of the binary tree.
+ * swap_values - swaps two integer values.
+ * @new: a pointer to the first value.
+ * @parent: a pointer to the second value.
  */
-
-size_t binary_tree_height(const binary_tree_t *tree)
+heap_t *swap_values(heap_t *new, heap_t *parent)
 {
-	size_t left_height, right_height;
+	int tmp;
 
-	if (tree == NULL)
-		return (0);
+	tmp = new->n;
+	new->n = parent->n;
+	parent->n = tmp;
 
-	if (tree->left == NULL && tree->right == NULL)
-		return (1);
-
-	left_height = binary_tree_height(tree->left);
-	right_height = binary_tree_height(tree->right);
-
-	if (left_height > right_height)
-		return (left_height + 1);
-
-	else
-		return (right_height + 1);
-}
-
-/**
- * binary_tree_is_perfect - checks if a binary tree is perfect.
- * If tree is NULL, function must return 0.
- * @tree: a pointer to the root node of the tree to checks.
- *
- * Return: 1 if the binary tree is perfect, and 0 otherwise.
- */
-
-int binary_tree_is_perfect(const binary_tree_t *tree)
-{
-	size_t get_height, nodes_numbers;
-
-	if (tree == NULL)
-		return (0);
-
-	get_height = binary_tree_height(tree);
-	nodes_numbers = (1 << get_height) - 1;
-
-	return (binary_tree_size(tree) == nodes_numbers);
+	return (parent);
 }
