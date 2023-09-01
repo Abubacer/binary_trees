@@ -79,7 +79,8 @@ size_t bt_size(const binary_tree_t *tree);
 heap_t *swap_values(heap_t *new, heap_t *parent);
 heap_t *heap_find_parent(heap_t *root, size_t idx);
 
-avl_t *avl_tree_rebalance(avl_t **root, avl_t *tree, int value);
+void avl_tree_rebalance(avl_t **root, avl_t *tree, int value);
 avl_t *recursive_avl_insert(avl_t *tree, avl_t *parent, int value);
+
 
 #endif
